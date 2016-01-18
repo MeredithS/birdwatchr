@@ -1,27 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="BirdWatcher">
 <head>
   <meta charset="UTF-8">
   <title>BirdWatchr</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="/angular/angular.js"></script>
   <script src="/js/main.js"></script>
+  <script type="text/javascript" src="/js/birds_controller.js"></script>
 </head>
 <body>
-  <h1>Birds of NY</h1>
-  <p>If you see something, say something!</p>
-  <a href="/sightings/new">Spotted a bird?</a>
-  <div id="recent-sightings">
+  <div id="recent-sightings" ng-controller="BirdsController as birds">
+    <h1>Birds of NY</h1>
+    <p>If you see something, say something!</p>
+    <a href="/sightings/new">Spotted a bird?</a>
+    <form>
+      <label>What bird?</label>
+      <input type="text" ng-model="birds.type">
+      <label>Where?</label>
+      <input type="text" ng-model="birds.location">
+      <button ng-click="birds.new()">Create Sighting</button>
+    </form>
     <h2>Recent Sightings!</h2>
     <ul>
       <!-- TODO format dates with moment.js -->
-      <% sightings.forEach(function(sighting){ %>
-        <li>
+        <li ng-repeat="sighting in birds.list">
           <span class="bird">
-            <%= sighting.bird %> last seen on <em><%= sighting.createdAt %></em>
+            {{sighting.bird}} last seen on <em>{{sighting.date}}</em>
           </span>
+          <a ng-href="http://maps.google.com/maps?z=18&q={{sighting.latLong.lat}},{{sighting.latLong.lng}}">See it on google maps</a>
         </li>
-      <% }) %>
     </ul>
   </div>
 </body>

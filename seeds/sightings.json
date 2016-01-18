@@ -1,0 +1,14 @@
+[{
+	"bird": "Robin",
+	"date":"Tue Jan 12 2016 08:00:00 GMT-0500 (EST)", 
+	"Location":"Manhattan, NY"
+	},
+	{
+	"bird": "Blue-Jay",
+	"date":"Sun Jan 10 2016 06:00:00 GMT-0500 (EST)", 
+	"Location":"Queens, NY"
+	},	
+	{"bird": "Oriole",
+	"date":"Fri Jan 15 2016 06:00:00 GMT-0500 (EST)",
+	"Location":"Severna Park, MD"
+	}]

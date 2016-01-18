@@ -1,8 +1,10 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var geocoder = require('geocoder');
 
 // Configuration
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/bower_components'));
@@ -21,21 +23,28 @@ MongoClient.connect(mongoUrl, function(err, database) {
 
 // Routes
 app.get('/', function(req, res){
-  db.collection('sightings').find({}).sort({createdAt: 1}).limit(3).toArray(function(err, results){
-    res.render('index', {sightings: results});
-  })
+  res.render('index');
 });
+
+app.get('/sightings', function(req,res){
+  db.collection('sightings').find({}).limit(3).sort({date:-1}).toArray(function(err,results){
+    // console.log(results)
+    res.json({sightings: results})
+  })
+})
 
 app.get('/sightings/new', function(req, res){
   res.render('form');
 });
 
 app.post('/sightings', function(req, res){
-  var sighting = req.body.sighting;
-  sighting.createdAt = new Date();
-  // TODO: geocode incoming address
-  db.collection('sightings').insert(sighting, function(err, result){
-    res.redirect('/');
+  var sighting = req.body
+  sighting.date = new Date();
+  geocoder.geocode(sighting.Location, function(err,result){
+    sighting.latLong = result.results[0].geometry.location;
+    db.collection('sightings').insert(sighting, function(err, result){
+    res.json(result);
+    })
   });
 });
 
